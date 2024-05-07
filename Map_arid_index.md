@@ -1,7 +1,3 @@
----
----
----
-
 # Map of field sites with aridity gradient
 
 Kian Kelly
