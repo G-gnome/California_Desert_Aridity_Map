@@ -40,20 +40,29 @@ library(ggspatial)
 
 ```
 
-### Adaped from: <https://www.painblogr.org/2020-12-15-climate-change.html>
+### Adapted from: <https://www.painblogr.org/2020-12-15-climate-change.html>
 
-# Download the files from the TerraClimate website
+# 1: Download the files from the TerraClimate website
+
+#### The TerraClimate project is basically a dataset containing climate station data which was interpolated on a global scale. It was the highest resolution dataset of it's kind. 
 
 ```{r}
 
 #--- Download the files from the TerraClimate website ---#
 # Precipitation
-download.file(url = 'http://thredds.northwestknowledge.net:8080/thredds/fileServer/TERRACLIMATE_ALL/data/TerraClimate_ppt_2023.nc',
-              destfile = 'ppt.nc')
+if (!file.exists('./ppt.nc')) {
+  download.file(url = 'http://thredds.northwestknowledge.net:8080/thredds/fileServer/TERRACLIMATE_ALL/data/TerraClimate_ppt_2023.nc',
+                destfile = 'ppt.nc')
+}
 
 # Evapotranspiration
-download.file(url = 'http://thredds.northwestknowledge.net:8080/thredds/fileServer/TERRACLIMATE_ALL/data/TerraClimate_pet_2019.nc',
-              destfile = 'pet.nc')
+if (!file.exists('./pet.nc')) {
+  download.file(url = 'http://thredds.northwestknowledge.net:8080/thredds/fileServer/TERRACLIMATE_ALL/data/TerraClimate_pet_2019.nc',
+                destfile = 'pet.nc')
+}
+```
+#### These are netCDF files which are basically like a CSV but with multiple dimensions (ie climate data for multiple months). Here you can see the raster data for each month of the year. Rasters are basically objects containing values associated with coordinates like x and y or lat and long
+```{r}
 
 #--- Import the downloaded files ---#
 # Precipitation
@@ -72,8 +81,8 @@ plot(ppt)
 plot(pet)
 ```
 
-# Calculate average Precipitation and Evapotranspiration for the world
-
+# 2: Calculate average Precipitation and Evapotranspiration for the world, crop for CA
+#### You can use raster maths functions to calculate means for multiple months. 
 ```{r}
 #--- Raster maths ---#
 # Precipitation
@@ -89,7 +98,7 @@ pet_mean <- calc(pet,
 ```
 
 ## Crop for California
-
+#### Here I crop coordinates for California, but you can use any coordinates you like.
 ```{r}
 #--- Set the extent ---#
 # Cut off all values outside California
@@ -113,8 +122,15 @@ plot(main = 'Precipitation',
      ppt_mean_cal)
 
 ```
+```{r}
+# Evapotranspiration
+plot(main = 'Evapotranspiration',
+     pet_mean_cal)
+```
 
-# Calculate aridity by overlaying the rasters and get ratio of Evapotranspiration to Precipitation
+# 3: Calculate aridity by overlaying the rasters and log normalize
+
+#### TerraClimate does not automatically calculate aridity. Aridity is the ratio of Precipitation to evapotransperation
 
 ```{r}
 
@@ -128,8 +144,7 @@ plot(main = 'Aridity index',
      aridity_index)
 ```
 
-## Convert to a df and log normalize for relative aridity
-
+#### Here we convert the raster to a dataframe and log normalize for later plotting steps. I am using relative aridity here since this is better for high resolution visualization. 
 ```{r}
 #--- Convert raster to a matrix ---#
 aridity_index_matrix <- rasterToPoints(aridity_index)
@@ -139,27 +154,14 @@ aridity_index_df <- as.data.frame(aridity_index_matrix)
 
 
 aridity_index_df$layer = log10(aridity_index_df$layer + 1)
-#--- Recode aridity index into categories --#
-#aridity_index_df <- aridity_index_df %>% 
-  # Recode
-#  mutate(category = case_when(
-#    is.infinite(layer) ~ 'Humid',
-#    layer >= 0.65 ~ 'Humid',
-#    layer >= 0.5 & layer < 0.65 ~ 'Dry sub-humid',
-#    layer >= 0.2 & layer < 0.5 ~ 'Semi-arid',
-#    layer >= 0.05 & layer < 0.2 ~ 'Arid',
-#    layer < 0.05 ~ 'Hyper-arid'
-#  )) %>% 
-  # Convert to ordered factor
- # mutate(category = factor(category,
-  #                         levels = c('Hyper-arid', 'Arid', 'Semi-arid',
-   #                                   'Dry sub-humid', 'Humid'),
-    #                       ordered = TRUE))
+
 ```
 
-# Plot the first map
+# 4: Plot the first map
 
 ## Get California geometry and turn to sf object
+
+#### You can use USAboundaries package to obtain the California geometry as I did here. If you are interested in another state you can modify this. the geometry is loaded in st format which is not compatible with ggplot so you can use st as sf to convert it. 
 
 ```{r}
 
@@ -172,6 +174,8 @@ ca_geom <- st_as_sf(ca)
 ```
 
 ## Read in shapefile for California Deserts
+
+#### You can obtain these shapefiles for different climates using www.sciencebase.gov if you are intrested in adding park borders, etc.
 
 ```{r}
 # Path to your shapefile
@@ -186,7 +190,7 @@ shapefile_mojave <- st_read(shapefile_path_moja)
 head(shapefile_mojave)
 ```
 
-## Set a color pallette
+#### Set a color pallette
 
 ```{r}
 # Define the number of colors you want in the palette
@@ -199,8 +203,9 @@ palette <- colorRampPalette(c("beige", "forestgreen", "darkgreen"))(num_colors)
 
 ```
 
-## Plot first map
+## Plot
 
+#### the tricky part here is loading in the shapefiles. geom_sf lets you do this. geom_raster allows you to plot the aridity data. How this works is each object has associated coordinates which can be overlayed. 
 ```{r}
 
 p <- ggplot() +
@@ -229,8 +234,9 @@ p <- ggplot() +
 p
 ```
 
-# Plot map with compass, scale, and metadata
+# 5: Plot map with compass, scale, and metadata
 
+#### Here I just made a simple excel sheet with X and Y coordinates for Lat and Long for each of my sites to plot coordinates. I also use ggspatial to add a compas and scalebar. 
 ```{r}
 
 meta <- read_tsv("./Site_metadata.tsv")
@@ -254,7 +260,7 @@ p +
   geom_point( data=meta, aes(x=Lattitude, y=Longitude, color=Site)) +
   scale_color_manual(name="Geographic Area", values= c("#F535AA", "red3", "green","blue","orange", "pink")) 
 ```
-
+#### Save
 ```{r}
 
 ggsave(filename = './art_map.png', plot = last_plot(), device = 'png', width = 10, height = 6, dpi = 300)

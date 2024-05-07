@@ -1,5 +1,5 @@
-# Map of field sites with aridity gradient
-
+Map of field sites with aridity gradient
+================
 Kian Kelly
 
 # Load Libraries
@@ -29,39 +29,45 @@ library(ggspatial)
 
 ### Adaped from: <https://www.painblogr.org/2020-12-15-climate-change.html>
 
-# Download the files from the TerraClimate website
+# 1: Download the files from the TerraClimate website
+
+#### The TerraClimate project is basically a dataset containing climate station data which was interpolated on a global scale. It was the highest resolution dataset of it’s kind.
 
 ``` r
 #--- Download the files from the TerraClimate website ---#
 # Precipitation
-download.file(url = "http://thredds.northwestknowledge.net:8080/thredds/fileServer/TERRACLIMATE_ALL/data/TerraClimate_ppt_2023.nc",
-    destfile = "ppt.nc")
+if (!file.exists("./ppt.nc")) {
+    download.file(url = "http://thredds.northwestknowledge.net:8080/thredds/fileServer/TERRACLIMATE_ALL/data/TerraClimate_ppt_2023.nc",
+        destfile = "ppt.nc")
+}
 
 # Evapotranspiration
-download.file(url = "http://thredds.northwestknowledge.net:8080/thredds/fileServer/TERRACLIMATE_ALL/data/TerraClimate_pet_2019.nc",
-    destfile = "pet.nc")
+if (!file.exists("./pet.nc")) {
+    download.file(url = "http://thredds.northwestknowledge.net:8080/thredds/fileServer/TERRACLIMATE_ALL/data/TerraClimate_pet_2019.nc",
+        destfile = "pet.nc")
+}
+```
 
+#### These are netCDF files which are basically like a CSV but with multiple dimensions (ie climate data for multiple months). Here you can see the raster data for each month of the year. Rasters are basically objects containing values associated with coordinates like x and y or lat and long
+
+``` r
 #--- Import the downloaded files ---#
 # Precipitation
 ppt <- stack(x = "ppt.nc")
 ```
 
-```         
-## Loading required namespace: ncdf4
+    ## Loading required namespace: ncdf4
 
-## Warning in .getCRSfromGridMap4(atts): cannot process these parts of the crs:
-## long_name=crs
-```
+    ## Warning in .getCRSfromGridMap4(atts): cannot process these parts of the crs:
+    ## long_name=crs
 
 ``` r
 # Evapotranspiration
 pet <- stack(x = "pet.nc")
 ```
 
-```         
-## Warning in .getCRSfromGridMap4(atts): cannot process these parts of the crs:
-## long_name=crs
-```
+    ## Warning in .getCRSfromGridMap4(atts): cannot process these parts of the crs:
+    ## long_name=crs
 
 ``` r
 #--- Inspect ---#
@@ -69,16 +75,18 @@ pet <- stack(x = "pet.nc")
 plot(ppt)
 ```
 
-![](Map_arid_index_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+![](Map_arid_index_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 ``` r
 # Evapotranspiration
 plot(pet)
 ```
 
-![](Map_arid_index_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![](Map_arid_index_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
-# Calculate average Precipitation and Evapotranspiration for the world
+# 2: Calculate average Precipitation and Evapotranspiration for the world, crop for CA
+
+#### You can use raster maths functions to calculate means for multiple months.
 
 ``` r
 #--- Raster maths ---#
@@ -94,6 +102,8 @@ pet_mean <- calc(pet,
 ```
 
 ## Crop for California
+
+#### Here I crop coordinates for California, but you can use any coordinates you like.
 
 ``` r
 #--- Set the extent ---#
@@ -114,9 +124,18 @@ pet_mean_cal <- crop(x = pet_mean, y = ext)
 plot(main = "Precipitation", ppt_mean_cal)
 ```
 
-![](Map_arid_index_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](Map_arid_index_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
-# Calculate aridity by overlaying the rasters and get ratio of Evapotranspiration to Precipitation
+``` r
+# Evapotranspiration
+plot(main = "Evapotranspiration", pet_mean_cal)
+```
+
+![](Map_arid_index_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+# 3: Calculate aridity by overlaying the rasters and log normalize
+
+#### TerraClimate does not automatically calculate aridity. Aridity is the ratio of Precipitation to evapotransperation
 
 ``` r
 #--- Calculate aridity index ---#
@@ -129,9 +148,9 @@ plot(main = 'Aridity index',
      aridity_index)
 ```
 
-![](Map_arid_index_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](Map_arid_index_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
-## Convert to a df and log normalize for relative aridity
+#### Here we convert the raster to a dataframe and log normalize for later plotting steps. I am using relative aridity here since this is better for high resolution visualization.
 
 ``` r
 #--- Convert raster to a matrix ---#
@@ -142,21 +161,13 @@ aridity_index_df <- as.data.frame(aridity_index_matrix)
 
 
 aridity_index_df$layer = log10(aridity_index_df$layer + 1)
-#--- Recode aridity index into categories --#
-# aridity_index_df <- aridity_index_df %>% Recode
-# mutate(category = case_when( is.infinite(layer) ~
-# 'Humid', layer >= 0.65 ~ 'Humid', layer >= 0.5 & layer <
-# 0.65 ~ 'Dry sub-humid', layer >= 0.2 & layer < 0.5 ~
-# 'Semi-arid', layer >= 0.05 & layer < 0.2 ~ 'Arid', layer
-# < 0.05 ~ 'Hyper-arid' )) %>% Convert to ordered factor
-# mutate(category = factor(category, levels =
-# c('Hyper-arid', 'Arid', 'Semi-arid', 'Dry sub-humid',
-# 'Humid'), ordered = TRUE))
 ```
 
-# Plot the first map
+# 4: Plot the first map
 
 ## Get California geometry and turn to sf object
+
+#### You can use USAboundaries package to obtain the California geometry as I did here. If you are interested in another state you can modify this. the geometry is loaded in st format which is not compatible with ggplot so you can use st as sf to convert it.
 
 ``` r
 # Get the geometry of California
@@ -167,6 +178,8 @@ ca_geom <- st_as_sf(ca)
 
 ## Read in shapefile for California Deserts
 
+#### You can obtain these shapefiles for different climates using www.sciencebase.gov if you are intrested in adding park borders, etc.
+
 ``` r
 # Path to your shapefile source:
 # https://www.sciencebase.gov/catalog/item/5835e1cae4b0d9329c801b7b
@@ -176,16 +189,14 @@ shapefile_path_moja <- "./ca_sections.shp"
 shapefile_mojave <- st_read(shapefile_path_moja)
 ```
 
-```         
-## Reading layer `ca_sections' from data source 
-##   `/rhome/kkell060/California_Desert_Aridity_Map/ca_sections.shp' 
-##   using driver `ESRI Shapefile'
-## Simple feature collection with 5 features and 2 fields
-## Geometry type: MULTIPOLYGON
-## Dimension:     XY
-## Bounding box:  xmin: -2049212 ymin: 1242364 xmax: -1646663 ymax: 2156443
-## Projected CRS: USA_Contiguous_Albers_Equal_Area_Conic_USGS_version
-```
+    ## Reading layer `ca_sections' from data source 
+    ##   `/rhome/kkell060/California_Desert_Aridity_Map/ca_sections.shp' 
+    ##   using driver `ESRI Shapefile'
+    ## Simple feature collection with 5 features and 2 fields
+    ## Geometry type: MULTIPOLYGON
+    ## Dimension:     XY
+    ## Bounding box:  xmin: -2049212 ymin: 1242364 xmax: -1646663 ymax: 2156443
+    ## Projected CRS: USA_Contiguous_Albers_Equal_Area_Conic_USGS_version
 
 ``` r
 # Now you can work with the shapefile object For example,
@@ -193,21 +204,19 @@ shapefile_mojave <- st_read(shapefile_path_moja)
 head(shapefile_mojave)
 ```
 
-```         
-## Simple feature collection with 5 features and 2 fields
-## Geometry type: MULTIPOLYGON
-## Dimension:     XY
-## Bounding box:  xmin: -2049212 ymin: 1242364 xmax: -1646663 ymax: 2156443
-## Projected CRS: USA_Contiguous_Albers_Equal_Area_Conic_USGS_version
-##                    SECTION  HECTARES                       geometry
-## 1            Mojave Desert 6683364.7 MULTIPOLYGON (((-1881344 17...
-## 2           Sonoran Desert 1287772.2 MULTIPOLYGON (((-1647076 14...
-## 3                     Mono  798113.1 MULTIPOLYGON (((-2007430 21...
-## 4          Colorado Desert 1185214.8 MULTIPOLYGON (((-1706593 12...
-## 5 Southeastern Great Basin 1103856.7 MULTIPOLYGON (((-1913060 18...
-```
+    ## Simple feature collection with 5 features and 2 fields
+    ## Geometry type: MULTIPOLYGON
+    ## Dimension:     XY
+    ## Bounding box:  xmin: -2049212 ymin: 1242364 xmax: -1646663 ymax: 2156443
+    ## Projected CRS: USA_Contiguous_Albers_Equal_Area_Conic_USGS_version
+    ##                    SECTION  HECTARES                       geometry
+    ## 1            Mojave Desert 6683364.7 MULTIPOLYGON (((-1881344 17...
+    ## 2           Sonoran Desert 1287772.2 MULTIPOLYGON (((-1647076 14...
+    ## 3                     Mono  798113.1 MULTIPOLYGON (((-2007430 21...
+    ## 4          Colorado Desert 1185214.8 MULTIPOLYGON (((-1706593 12...
+    ## 5 Southeastern Great Basin 1103856.7 MULTIPOLYGON (((-1913060 18...
 
-## Set a color pallette
+#### Set a color pallette
 
 ``` r
 # Define the number of colors you want in the palette
@@ -217,7 +226,9 @@ num_colors <- 10000
 palette <- colorRampPalette(c("beige", "forestgreen", "darkgreen"))(num_colors)
 ```
 
-## Plot first map
+## Plot
+
+#### the tricky part here is loading in the shapefiles. geom_sf lets you do this. geom_raster allows you to plot the aridity data. How this works is each object has associated coordinates which can be overlayed.
 
 ``` r
 p <- ggplot() +
@@ -244,36 +255,34 @@ p <- ggplot() +
          colour = guide_legend(reverse = TRUE, title = "Relative aridity", title.position = "top")) 
 ```
 
-```         
-## Warning: The `size` argument of `element_line()` is deprecated as of ggplot2 3.4.0.
-## ℹ Please use the `linewidth` argument instead.
-## This warning is displayed once every 8 hours.
-## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-## generated.
-```
+    ## Warning: The `size` argument of `element_line()` is deprecated as of ggplot2 3.4.0.
+    ## ℹ Please use the `linewidth` argument instead.
+    ## This warning is displayed once every 8 hours.
+    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+    ## generated.
 
 ``` r
 p
 ```
 
-![](Map_arid_index_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](Map_arid_index_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
-# Plot map with compass, scale, and metadata
+# 5: Plot map with compass, scale, and metadata
+
+#### Here I just made a simple excel sheet with X and Y coordinates for Lat and Long for each of my sites to plot coordinates. I also use ggspatial to add a compas and scalebar.
 
 ``` r
 meta <- read_tsv("./Site_metadata.tsv")
 ```
 
-```         
-## Rows: 5 Columns: 4
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: "\t"
-## chr (2): Site, Climate
-## dbl (2): Longitude, Lattitude
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-```
+    ## Rows: 5 Columns: 4
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: "\t"
+    ## chr (2): Site, Climate
+    ## dbl (2): Longitude, Lattitude
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 
 ``` r
 meta$Site <- factor(meta$Site, levels = c("TP", "AB", "CIMA",
@@ -291,7 +300,8 @@ p + ggspatial::annotation_scale(location = "bl", bar_cols = c("black",
         "pink"))
 ```
 
-![](Map_arid_index_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](Map_arid_index_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+\#### Save
 
 ``` r
 ggsave(filename = "./art_map.png", plot = last_plot(), device = "png",
