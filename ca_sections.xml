@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <idinfo>
+    <citation>
+      <citeinfo>
+        <origin>Matthew L. Brooks</origin>
+        <origin>John R. Matchett</origin>
+        <pubdate>20161215</pubdate>
+        <title>Ecoregion sections of California deserts</title>
+        <edition>version 1</edition>
+        <geoform>vector digital data</geoform>
+        <pubinfo>
+          <pubplace>Denver, CO</pubplace>
+          <publish>U.S. Geological Survey</publish>
+        </pubinfo>
+        <onlink>http://doi.org/10.5066/F75B00MP</onlink>
+        <onlink>https://www.sciencebase.gov/catalog/item/5834c69fe4b0070c0abfb5f7</onlink>
+      </citeinfo>
+    </citation>
+    <descript>
+      <abstract>The dataset delineates ecological sections within California deserts. These deserts occupy the southeastern portion of California and include two ecoregional provinces comprised of five desert regions ("ecological sections"; Miles and Goudey 1997). The American Semi-Desert and Desert Province (warm deserts) includes the Mojave Desert, Sonoran Desert, and Colorado Desert sections in the southern 83% of the California desert. The Intermountain Semi-Desert Province (cold deserts) includes the Southeastern Great Basin and Mono sections in the northern 17% of the region.</abstract>
+      <purpose>These data were developed to assess the distribution of wildfire regimes across California deserts for the chapter "Southeast Deserts Bioregion" in the book "Fire in California's Ecosystems, Second Edition" published by University of California Press.</purpose>
+    </descript>
+    <timeperd>
+      <timeinfo>
+        <sngdate>
+          <caldate>20161215</caldate>
+        </sngdate>
+      </timeinfo>
+      <current>publication date</current>
+    </timeperd>
+    <status>
+      <progress>Complete</progress>
+      <update>None planned</update>
+    </status>
+    <spdom>
+      <bounding>
+        <westbc>-120.49796</westbc>
+        <eastbc>-113.80364</eastbc>
+        <northbc>40.86549</northbc>
+        <southbc>32.10899</southbc>
+      </bounding>
+    </spdom>
+    <keywords>
+      <theme>
+        <themekt>None</themekt>
+        <themekey>wildfire regimes</themekey>
+        <themekey>deserts</themekey>
+      </theme>
+      <theme>
+        <themekt>USGS Metadata Identifier</themekt>
+        <themekey>USGS:5835e1cae4b0d9329c801b7b</themekey>
+      </theme>
+      <place>
+        <placekt>None</placekt>
+        <placekey>California</placekey>
+        <placekey>Mojave Desert</placekey>
+        <placekey>Colorado Desert</placekey>
+        <placekey>Sonoran Desert</placekey>
+        <placekey>Great Basin</placekey>
+        <placekey>Mono</placekey>
+      </place>
+    </keywords>
+    <accconst>None</accconst>
+    <useconst>The authors of these data require that users direct any questions pertaining to appropriate use or assistance with understanding limitations and interpretation of the data to the individuals/organization listed in the Point of Contact section.</useconst>
+    <ptcontac>
+      <cntinfo>
+        <cntperp>
+          <cntper>John R. Matchett</cntper>
+          <cntorg>U.S. Geological Survey</cntorg>
+        </cntperp>
+        <cntaddr>
+          <addrtype>mailing and physical</addrtype>
+          <address>40298 Junction Drive, Suite A</address>
+          <city>Oakhurst</city>
+          <state>CA</state>
+          <postal>93644</postal>
+          <country>United States</country>
+        </cntaddr>
+        <cntvoice>559-641-2020</cntvoice>
+        <cntemail>jmatchett@usgs.gov</cntemail>
+      </cntinfo>
+    </ptcontac>
+  </idinfo>
+  <dataqual>
+    <attracc>
+      <attraccr>These data were derived from existing sources with varying attribute accuracies and include uncertainties in classification of biophysical/vegetation types and areas burned by wildfire. Further information on the accuracies of those methods are available from the respective dataset creators, particularly the LANDFIRE program (http://landfire.gov) and Monitoring Trends in Burn Severity program (http://www.mtbs.gov). We checked the general consistency of extracted and derived values from those input datasets -- for example that biophysical settings (BpS) values existed in the BpS names lookup table, areas classified as non-wildland generally matched areas known to be developed/agricultural areas, and that the calculated wildfire frequencies were positive integers -- however, no further assessments of classification accuracies were conducted.</attraccr>
+    </attracc>
+    <logic>No formal logical accuracy tests were conducted.</logic>
+    <complete>Data set is considered complete for the information presented, as described in the abstract. Users are advised to read the rest of the metadata record carefully for additional details.</complete>
+    <posacc>
+      <horizpa>
+        <horizpar>These data were derived from existing sources with varying positional accuracies and no further accuracy assessments were conducted.</horizpar>
+      </horizpa>
+      <vertacc>
+        <vertaccr>Not applicable. This data set does not include vertical postions.</vertaccr>
+      </vertacc>
+    </posacc>
+    <lineage>
+      <srcinfo>
+        <srccite>
+          <citeinfo>
+            <origin>S.R. Miles</origin>
+            <origin>C.B. Goudey</origin>
+            <pubdate>1997</pubdate>
+            <title>Ecological subregions of California: section and subsection descriptions</title>
+            <edition>version 1</edition>
+            <geoform>vector digital data</geoform>
+            <pubinfo>
+              <pubplace>San Francisco</pubplace>
+              <publish>USDA Forest Service</publish>
+            </pubinfo>
+            <onlink>https://databasin.org/datasets/4996c7e61a0e48f2bef646903f51b82b</onlink>
+          </citeinfo>
+        </srccite>
+        <typesrc>online</typesrc>
+        <srctime>
+          <timeinfo>
+            <sngdate>
+              <caldate>1997</caldate>
+            </sngdate>
+          </timeinfo>
+          <srccurr>publication date</srccurr>
+        </srctime>
+        <srccitea>EcoregionsCalifornia07_3.mdb</srccitea>
+        <srccontr>Used to define boundaries of data extraction.</srccontr>
+      </srcinfo>
+      <procstep>
+        <procdesc>Selected sections named 'Mojave Desert', 'Sonoran Desert', 'Mono', 'Colorado Desert', and 'Southeastern Great Basin'.</procdesc>
+        <procdate>20160301</procdate>
+      </procstep>
+      <procstep>
+        <procdesc>Software tools used for data processing included Python (v3.4.3), GDAL Python package (v1.11.0), numpy Python package (v1.9.0), scipy Python package (v0.14.0), psycopg2 Python package (v2.5.3), GDAL Geospatial Data Abstraction Library (v1.11.2), PostgreSQL (v9.4.4), and PostGIS (v2.1.7)</procdesc>
+        <procdate>20160301</procdate>
+      </procstep>
+    </lineage>
+  </dataqual>
+  <spdoinfo>
+    <direct>Vector</direct>
+  </spdoinfo>
+  <spref>
+    <horizsys>
+      <planar>
+        <mapproj>
+          <mapprojn>Albers Conical Equal Area</mapprojn>
+          <albers>
+            <stdparll>29.5</stdparll>
+            <stdparll>45.5</stdparll>
+            <longcm>-96</longcm>
+            <latprjo>23</latprjo>
+            <feast>0</feast>
+            <fnorth>0</fnorth>
+          </albers>
+        </mapproj>
+        <planci>
+          <plance>coordinate pair</plance>
+          <coordrep>
+            <absres>0.001</absres>
+            <ordres>0.001</ordres>
+          </coordrep>
+          <plandu>meters</plandu>
+        </planci>
+      </planar>
+      <geodetic>
+        <horizdn>North American Datum of 1983</horizdn>
+        <ellips>Geodetic Reference System 80</ellips>
+        <semiaxis>6378137</semiaxis>
+        <denflat>298.257222101</denflat>
+      </geodetic>
+    </horizsys>
+  </spref>
+  <eainfo>
+    <detailed>
+      <enttyp>
+        <enttypl>ca_sections.shp</enttypl>
+        <enttypd>Desert sections in California layer.</enttypd>
+        <enttypds>producer defined</enttypds>
+      </enttyp>
+      <attr>
+        <attrlabl>section</attrlabl>
+        <attrdef>ecoregion section name</attrdef>
+        <attrdefs>producer defined</attrdefs>
+        <attrdomv>
+          <edom>
+            <edomv>Colorado Desert</edomv>
+            <edomvd>Colorado Desert section</edomvd>
+            <edomvds>producer defined</edomvds>
+          </edom>
+        </attrdomv>
+        <attrdomv>
+          <edom>
+            <edomv>Mojave Desert</edomv>
+            <edomvd>Mojave Desert section</edomvd>
+            <edomvds>producer defined</edomvds>
+          </edom>
+        </attrdomv>
+        <attrdomv>
+          <edom>
+            <edomv>Mono</edomv>
+            <edomvd>Mono section</edomvd>
+            <edomvds>producer defined</edomvds>
+          </edom>
+        </attrdomv>
+        <attrdomv>
+          <edom>
+            <edomv>Sonoran Desert</edomv>
+            <edomvd>Sonoran Desert section</edomvd>
+            <edomvds>producer defined</edomvds>
+          </edom>
+        </attrdomv>
+        <attrdomv>
+          <edom>
+            <edomv>Southeastern Great Basin</edomv>
+            <edomvd>Southeastern Great Basin section</edomvd>
+            <edomvds>producer defined</edomvds>
+          </edom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>hectares</attrlabl>
+        <attrdef>area of section in hectares</attrdef>
+        <attrdefs>producer defined</attrdefs>
+        <attrdomv>
+          <rdom>
+            <rdommin>798113.089828438</rdommin>
+            <rdommax>6683364.70624266</rdommax>
+            <attrunit>hectares</attrunit>
+          </rdom>
+        </attrdomv>
+      </attr>
+    </detailed>
+  </eainfo>
+  <distinfo>
+    <distrib>
+      <cntinfo>
+        <cntorgp>
+          <cntorg>U.S. Geological Survey - ScienceBase</cntorg>
+        </cntorgp>
+        <cntaddr>
+          <addrtype>mailing and physical</addrtype>
+          <address>Denver Federal Center, Building 810, Mail Stop 302</address>
+          <city>Denver</city>
+          <state>CO</state>
+          <postal>80255</postal>
+          <country>United States</country>
+        </cntaddr>
+        <cntvoice>888-275-8747</cntvoice>
+        <cntemail>sciencebase@usgs.gov</cntemail>
+      </cntinfo>
+    </distrib>
+    <resdesc>ESRI shapefile</resdesc>
+    <distliab>Unless otherwise stated, all data, metadata and related materials are considered to satisfy the quality standards relative to the purpose for which the data were collected. Although these data and associated metadata have been reviewed for accuracy and completeness and approved for release by the U.S. Geological Survey (USGS), no warranty expressed or implied is made regarding the display or utility of the data on any other system or for general or scientific purposes, nor shall the act of distribution constitute any such warranty. Any use of trade, firm, or product names is for descriptive purposes only and does not imply endorsement by the U.S. Government.</distliab>
+    <stdorder>
+      <digform>
+        <digtinfo>
+          <formname>SHP, DBF, SHX, and PRJ files</formname>
+          <formvern>unknown</formvern>
+          <transize>0.544</transize>
+        </digtinfo>
+        <digtopt>
+          <onlinopt>
+            <computer>
+              <networka>
+                <networkr>http://doi.org/10.5066/F75B00MP</networkr>
+                <networkr>https://www.sciencebase.gov/catalog/item/5834c69fe4b0070c0abfb5f7</networkr>
+              </networka>
+            </computer>
+          </onlinopt>
+        </digtopt>
+      </digform>
+      <fees>None. No fees are applicable for obtaining the data set.</fees>
+      <ordering>Product can be downloaded from our Sciencebase website.</ordering>
+    </stdorder>
+    <techpreq>This dataset can be read using software capable of handling ESRI shapefiles.</techpreq>
+    <availabl>
+      <timeinfo>
+        <sngdate>
+          <caldate>20161215</caldate>
+        </sngdate>
+      </timeinfo>
+    </availabl>
+  </distinfo>
+  <metainfo>
+    <metd>20200830</metd>
+    <metc>
+      <cntinfo>
+        <cntperp>
+          <cntper>John R. Matchett</cntper>
+          <cntorg>U.S. Geological Survey</cntorg>
+        </cntperp>
+        <cntaddr>
+          <addrtype>mailing and physical</addrtype>
+          <address>40298 Junction Drive, Suite A</address>
+          <city>Oakhurst</city>
+          <state>CA</state>
+          <postal>93644</postal>
+          <country>United States</country>
+        </cntaddr>
+        <cntvoice>559-641-2020</cntvoice>
+        <cntemail>jmatchett@usgs.gov</cntemail>
+      </cntinfo>
+    </metc>
+    <metstdn>FGDC Content Standard for Digital Geospatial Metadata</metstdn>
+    <metstdv>FGDC-STD-001-1998</metstdv>
+  </metainfo>
+</metadata>
